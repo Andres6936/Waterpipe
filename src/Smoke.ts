@@ -1,0 +1,348 @@
+import {SmokeNiceBG} from "./SmokeNiceBG";
+
+interface Defaults {
+    gradientStart: string
+    gradientEnd: string
+    smokeOpacity: number
+    numCircles: number
+    maxMaxRad: number | string
+    minMaxRad: number | string
+    minRadFactor: number
+    iterations: number
+    drawsPerFrame: number
+    lineWidth: number
+    speed: number
+    bgColorInner: string
+    bgColorOuter: string
+}
+
+const pluginName = "waterpipe";
+const defaults: Defaults = {
+    //Smoke
+    gradientStart: '#000000',
+    gradientEnd: '#222222',
+    smokeOpacity: 0.1,
+    numCircles: 1,
+    maxMaxRad: 'auto',
+    minMaxRad: 'auto',
+    minRadFactor: 0,
+    iterations: 8,
+    drawsPerFrame: 10,
+    lineWidth: 2,
+    speed: 1,
+    //Background
+    bgColorInner: "#ffffff",
+    bgColorOuter: "#666666",
+};
+
+const TWO_PI = 2 * Math.PI;
+let timer;
+let inst;
+
+export class Smoke {
+    element: HTMLElement
+    $element: any
+    settings: Defaults
+    drawCount: number
+    exportCanvas: HTMLCanvasElement
+    exportContext: CanvasRenderingContext2D
+    displayCanvas: HTMLCanvasElement
+    context: CanvasRenderingContext2D
+    displayHeight: number
+    displayWidth: number
+    _defaults: Defaults
+    _name: string
+    niceGradient: SmokeNiceBG
+    circles: any[]
+
+    constructor(element, options) {
+        this.element = element;
+        this.$element = $(element);
+        inst = this;
+        this.settings = $.extend({}, defaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
+        this.init();
+    }
+
+    init() {
+        this.initSettings();
+        this.initCanvas();
+        this.generate();
+    }
+
+    initSettings() {
+        var radius = this.$element.height() * 0.8 / 2;
+        if (this.settings.maxMaxRad === 'auto') this.settings.maxMaxRad = radius;
+        if (this.settings.minMaxRad === 'auto') this.settings.minMaxRad = radius;
+    }
+
+    initCanvas() {
+        this.displayCanvas = this.$element.find('canvas');
+        this.displayWidth = this.$element[0].clientWidth;
+        this.displayHeight = this.$element[0].clientHeight;
+        this.displayCanvas[0].width = this.displayWidth;
+        this.displayCanvas[0].height = this.displayHeight;
+        this.context = this.displayCanvas[0].getContext("2d");
+
+        //off screen canvas used only when exporting image
+        this.exportCanvas = document.createElement('canvas');
+        this.exportCanvas.width = this.displayWidth;
+        this.exportCanvas.height = this.displayHeight;
+        this.exportContext = this.exportCanvas.getContext("2d");
+    }
+
+    generate() {
+        this.drawCount = 0;
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
+        this.context.clearRect(0, 0, this.displayWidth, this.displayHeight);
+        this.fillBackground();
+
+        this.setCircles();
+
+        if (timer) {
+            clearInterval(timer);
+        }
+        timer = setInterval(function () {
+            inst.onTimer()
+        }, inst.settings.speed);
+
+    }
+
+    fillBackground() {
+        var outerRad = Math.sqrt(this.displayWidth * this.displayWidth + this.displayHeight * this.displayHeight) / 2;
+        this.niceGradient = new SmokeNiceBG(this.displayWidth * 0.75, this.displayHeight / 2 * 0.75, 0, this.displayWidth / 2, this.displayHeight / 4, outerRad);
+
+        var hex = this.settings.bgColorInner.replace('#', '');
+
+        var r0 = parseInt(hex.substring(0, 2), 16),
+            g0 = parseInt(hex.substring(2, 4), 16),
+            b0 = parseInt(hex.substring(4, 6), 16);
+
+        hex = this.settings.bgColorOuter.replace('#', '');
+        var r1 = parseInt(hex.substring(0, 2), 16),
+            g1 = parseInt(hex.substring(2, 4), 16),
+            b1 = parseInt(hex.substring(4, 6), 16);
+
+        this.niceGradient.addColorStop(0, r0, g0, b0);
+        this.niceGradient.addColorStop(1, r1, g1, b1);
+        this.niceGradient.fillRect(this.context, 0, 0, this.displayWidth, this.displayHeight);
+    }
+
+    setCircles() {
+        var i;
+        var r, g, b, a;
+        var maxR, minR;
+        var grad;
+
+        this.circles = [];
+
+        for (i = 0; i < this.settings.numCircles; i++) {
+            // @ts-ignore
+            maxR = this.settings.minMaxRad + Math.random() * (this.settings.maxMaxRad - this.settings.minMaxRad);
+            minR = this.settings.minRadFactor * maxR;
+
+            //define gradient
+            grad = this.context.createRadialGradient(0, 0, minR, 0, 0, maxR);
+            var gradientStart = this.hexToRGBA(this.settings.gradientStart, this.settings.smokeOpacity),
+                gradientEnd = this.hexToRGBA(this.settings.gradientEnd, this.settings.smokeOpacity);
+
+            grad.addColorStop(1, gradientStart);
+            grad.addColorStop(0, gradientEnd);
+
+            const newCircle = {
+                centerX: -maxR,
+                centerY: this.displayHeight / 2 - 50,
+                maxRad: maxR,
+                minRad: minR,
+                color: grad, //can set a gradient or solid color here.
+                //fillColor: "rgba(0,0,0,1)",
+                param: 0,
+                changeSpeed: 1 / 250,
+                phase: Math.random() * TWO_PI, //the phase to use for a single fractal curve.
+                globalPhase: Math.random() * TWO_PI, //the curve as a whole will rise and fall by a sinusoid.
+                pointList1: undefined,
+                pointList2: undefined
+            };
+            this.circles.push(newCircle);
+            newCircle.pointList1 = this.setLinePoints(this.settings.iterations);
+            newCircle.pointList2 = this.setLinePoints(this.settings.iterations);
+        }
+    }
+
+    onTimer() {
+        var i, j;
+        var c;
+        var rad;
+        var point1, point2;
+        var x0, y0;
+        var cosParam;
+
+        var xSqueeze = 0.75; //cheap 3D effect by shortening in x direction.
+
+        var yOffset;
+
+        //draw circles
+        for (j = 0; j < this.settings.drawsPerFrame; j++) {
+
+            this.drawCount++;
+
+            for (i = 0; i < this.settings.numCircles; i++) {
+                c = this.circles[i];
+                c.param += c.changeSpeed;
+                if (c.param >= 1) {
+                    c.param = 0;
+
+                    c.pointList1 = c.pointList2;
+                    c.pointList2 = this.setLinePoints(this.settings.iterations);
+                }
+                cosParam = 0.5 - 0.5 * Math.cos(Math.PI * c.param);
+
+                this.context.strokeStyle = c.color;
+                this.context.lineWidth = this.settings.lineWidth;
+                //context.fillStyle = c.fillColor;
+                this.context.beginPath();
+                point1 = c.pointList1.first;
+                point2 = c.pointList2.first;
+
+                //slowly rotate
+                c.phase += 0.0002;
+
+                let theta = c.phase;
+                rad = c.minRad + (point1.y + cosParam * (point2.y - point1.y)) * (c.maxRad - c.minRad);
+
+                //move center
+                c.centerX += 0.5;
+                c.centerY += 0.04;
+                yOffset = 40 * Math.sin(c.globalPhase + this.drawCount / 1000 * TWO_PI);
+                //stop when off screen
+                // @ts-ignore
+                if (c.centerX > this.displayWidth + this.settings.maxMaxRad) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+
+                //we are drawing in new position by applying a transform. We are doing this so the gradient will move with the drawing.
+                this.context.setTransform(xSqueeze, 0, 0, 1, c.centerX, c.centerY + yOffset)
+
+                //Drawing the curve involves stepping through a linked list of points defined by a fractal subdivision process.
+                //It is like drawing a circle, except with varying radius.
+                x0 = xSqueeze * rad * Math.cos(theta);
+                y0 = rad * Math.sin(theta);
+                this.context.lineTo(x0, y0);
+                while (point1.next != null) {
+                    point1 = point1.next;
+                    point2 = point2.next;
+                    theta = TWO_PI * (point1.x + cosParam * (point2.x - point1.x)) + c.phase;
+                    rad = c.minRad + (point1.y + cosParam * (point2.y - point1.y)) * (c.maxRad - c.minRad);
+                    x0 = xSqueeze * rad * Math.cos(theta);
+                    y0 = rad * Math.sin(theta);
+                    this.context.lineTo(x0, y0);
+                }
+                this.context.closePath();
+                this.context.stroke();
+                //context.fill();
+
+            }
+        }
+    }
+
+    setLinePoints(iterations) {
+        var pointList = {
+            first: undefined
+        };
+        pointList.first = {x: 0, y: 1};
+        var lastPoint = {x: 1, y: 1}
+        var minY = 1;
+        var maxY = 1;
+        var point;
+        var nextPoint;
+        var dx, newX, newY;
+        var ratio;
+
+        var minRatio = 0.5;
+
+        pointList.first.next = lastPoint;
+        for (var i = 0; i < iterations; i++) {
+            point = pointList.first;
+            while (point.next != null) {
+                nextPoint = point.next;
+
+                dx = nextPoint.x - point.x;
+                newX = 0.5 * (point.x + nextPoint.x);
+                newY = 0.5 * (point.y + nextPoint.y);
+                newY += dx * (Math.random() * 2 - 1);
+
+                var newPoint = {x: newX, y: newY, next: undefined};
+
+                //min, max
+                if (newY < minY) {
+                    minY = newY;
+                } else if (newY > maxY) {
+                    maxY = newY;
+                }
+
+                //put between points
+                newPoint.next = nextPoint;
+                point.next = newPoint;
+
+                point = nextPoint;
+            }
+        }
+
+        //normalize to values between 0 and 1
+        if (maxY != minY) {
+            var normalizeRate = 1 / (maxY - minY);
+            point = pointList.first;
+            while (point != null) {
+                point.y = normalizeRate * (point.y - minY);
+                point = point.next;
+            }
+        }
+        //unlikely that max = min, but could happen if using zero iterations. In this case, set all points equal to 1.
+        else {
+            point = pointList.first;
+            while (point != null) {
+                point.y = 1;
+                point = point.next;
+            }
+        }
+
+        return pointList;
+    }
+
+    setOption(optionName, optionValue) {
+        this.settings[optionName] = optionValue;
+    }
+
+    hexToRGBA(hex, opacity) {
+        hex = hex.replace('#', '');
+        let r = parseInt(hex.substring(0, 2), 16);
+        let g = parseInt(hex.substring(2, 4), 16);
+        let b = parseInt(hex.substring(4, 6), 16);
+
+        let result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+        return result;
+    }
+
+    download(width, height) {
+        this.exportContext.drawImage(this.displayCanvas[0], 0, 0, width, height, 0, 0, width, height);
+        //we will open a new window with the image contained within:
+        //retrieve canvas image as data URL:
+        var dataURL = this.exportCanvas.toDataURL("image/png");
+        //open a new window of appropriate size to hold the image:
+        var imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width=" + width + ",height=" + height + ",toolbar=0,resizable=0");
+        //write some html into the new window, creating an empty image:
+        imageWindow.document.write("<title>Export Image</title>")
+        imageWindow.document.write("<img id='exportImage'"
+            + " alt=''"
+            + " height='" + height + "'"
+            + " width='" + width + "'"
+            + " style='position:absolute;left:0;top:0'/>");
+        imageWindow.document.close();
+        //copy the image into the empty img in the newly opened window:
+        var exportImage = imageWindow.document.getElementById("exportImage");
+        // @ts-ignore
+        exportImage.src = dataURL;
+    }
+}
