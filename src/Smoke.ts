@@ -40,19 +40,19 @@ let timer;
 let inst;
 
 export class Smoke {
-    element: HTMLElement
-    settings: Defaults
-    drawCount: number
-    exportCanvas: HTMLCanvasElement
-    exportContext: CanvasRenderingContext2D
-    displayCanvas: HTMLCanvasElement
-    context: CanvasRenderingContext2D
-    displayHeight: number
-    displayWidth: number
-    _defaults: Defaults
-    _name: string
-    niceGradient: SmokeNiceBG
-    circles: any[]
+    private element: HTMLElement
+    private settings: Defaults
+    private drawCount: number
+    private exportCanvas: HTMLCanvasElement
+    private exportContext: CanvasRenderingContext2D
+    private displayCanvas: HTMLCanvasElement
+    private context: CanvasRenderingContext2D
+    private displayHeight: number
+    private displayWidth: number
+    private _defaults: Defaults
+    private _name: string
+    private niceGradient: SmokeNiceBG
+    private circles: any[]
 
     constructor(element, options) {
         this.element = element;
