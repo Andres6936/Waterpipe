@@ -1,4 +1,4 @@
-import {SmokeNiceBG} from "./SmokeNiceBG";
+import {SmokeNiceBG} from "./SmokeNiceBG.js";
 
 interface Defaults {
     gradientStart: string
@@ -41,7 +41,6 @@ let inst;
 
 export class Smoke {
     element: HTMLElement
-    $element: any
     settings: Defaults
     drawCount: number
     exportCanvas: HTMLCanvasElement
@@ -57,9 +56,8 @@ export class Smoke {
 
     constructor(element, options) {
         this.element = element;
-        this.$element = $(element);
         inst = this;
-        this.settings = $.extend({}, defaults, options);
+        this.settings = {...defaults, ...options};
         this._defaults = defaults;
         this._name = pluginName;
         this.init();
@@ -72,20 +70,20 @@ export class Smoke {
     }
 
     initSettings() {
-        var radius = this.$element.height() * 0.8 / 2;
+        var radius = this.element.clientHeight * 0.8 / 2;
         if (this.settings.maxMaxRad === 'auto') this.settings.maxMaxRad = radius;
         if (this.settings.minMaxRad === 'auto') this.settings.minMaxRad = radius;
     }
 
     initCanvas() {
-        this.displayCanvas = this.$element.find('canvas');
-        this.displayWidth = this.$element[0].clientWidth;
-        this.displayHeight = this.$element[0].clientHeight;
-        this.displayCanvas[0].width = this.displayWidth;
-        this.displayCanvas[0].height = this.displayHeight;
-        this.context = this.displayCanvas[0].getContext("2d");
+        this.displayCanvas = document.getElementsByTagName('canvas').item(0);
+        this.displayWidth = this.element.clientWidth;
+        this.displayHeight = this.element.clientHeight;
+        this.displayCanvas.width = this.displayWidth;
+        this.displayCanvas.height = this.displayHeight;
+        this.context = this.displayCanvas.getContext("2d");
 
-        //off screen canvas used only when exporting image
+        //off-screen canvas used only when exporting image
         this.exportCanvas = document.createElement('canvas');
         this.exportCanvas.width = this.displayWidth;
         this.exportCanvas.height = this.displayHeight;
