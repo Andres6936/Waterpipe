@@ -60,37 +60,13 @@ export class Smoke {
         this.settings = {...defaults, ...options};
         this._defaults = defaults;
         this._name = pluginName;
-        this.init();
-    }
 
-    init() {
         this.initSettings();
         this.initCanvas();
         this.generate();
     }
 
-    initSettings() {
-        var radius = this.element.clientHeight * 0.8 / 2;
-        if (this.settings.maxMaxRad === 'auto') this.settings.maxMaxRad = radius;
-        if (this.settings.minMaxRad === 'auto') this.settings.minMaxRad = radius;
-    }
-
-    initCanvas() {
-        this.displayCanvas = document.getElementsByTagName('canvas').item(0);
-        this.displayWidth = this.element.clientWidth;
-        this.displayHeight = this.element.clientHeight;
-        this.displayCanvas.width = this.displayWidth;
-        this.displayCanvas.height = this.displayHeight;
-        this.context = this.displayCanvas.getContext("2d");
-
-        //off-screen canvas used only when exporting image
-        this.exportCanvas = document.createElement('canvas');
-        this.exportCanvas.width = this.displayWidth;
-        this.exportCanvas.height = this.displayHeight;
-        this.exportContext = this.exportCanvas.getContext("2d");
-    }
-
-    generate() {
+    public generate() {
         this.drawCount = 0;
         this.context.setTransform(1, 0, 0, 1, 0, 0);
         this.context.clearRect(0, 0, this.displayWidth, this.displayHeight);
@@ -101,24 +77,24 @@ export class Smoke {
         if (timer) {
             clearInterval(timer);
         }
-        timer = setInterval(function () {
+        timer = setInterval(() => {
             inst.onTimer()
         }, inst.settings.speed);
 
     }
 
     fillBackground() {
-        var outerRad = Math.sqrt(this.displayWidth * this.displayWidth + this.displayHeight * this.displayHeight) / 2;
+        const outerRad = Math.sqrt(this.displayWidth * this.displayWidth + this.displayHeight * this.displayHeight) / 2;
         this.niceGradient = new SmokeNiceBG(this.displayWidth * 0.75, this.displayHeight / 2 * 0.75, 0, this.displayWidth / 2, this.displayHeight / 4, outerRad);
 
-        var hex = this.settings.bgColorInner.replace('#', '');
+        let hex = this.settings.bgColorInner.replace('#', '');
 
-        var r0 = parseInt(hex.substring(0, 2), 16),
+        const r0 = parseInt(hex.substring(0, 2), 16),
             g0 = parseInt(hex.substring(2, 4), 16),
             b0 = parseInt(hex.substring(4, 6), 16);
 
         hex = this.settings.bgColorOuter.replace('#', '');
-        var r1 = parseInt(hex.substring(0, 2), 16),
+        const r1 = parseInt(hex.substring(0, 2), 16),
             g1 = parseInt(hex.substring(2, 4), 16),
             b1 = parseInt(hex.substring(4, 6), 16);
 
@@ -128,10 +104,9 @@ export class Smoke {
     }
 
     setCircles() {
-        var i;
-        var r, g, b, a;
-        var maxR, minR;
-        var grad;
+        let i;
+        let maxR, minR;
+        let grad;
 
         this.circles = [];
 
@@ -142,7 +117,7 @@ export class Smoke {
 
             //define gradient
             grad = this.context.createRadialGradient(0, 0, minR, 0, 0, maxR);
-            var gradientStart = this.hexToRGBA(this.settings.gradientStart, this.settings.smokeOpacity),
+            const gradientStart = this.hexToRGBA(this.settings.gradientStart, this.settings.smokeOpacity),
                 gradientEnd = this.hexToRGBA(this.settings.gradientEnd, this.settings.smokeOpacity);
 
             grad.addColorStop(1, gradientStart);
@@ -169,16 +144,16 @@ export class Smoke {
     }
 
     onTimer() {
-        var i, j;
-        var c;
-        var rad;
-        var point1, point2;
-        var x0, y0;
-        var cosParam;
+        let i, j;
+        let c;
+        let rad;
+        let point1, point2;
+        let x0, y0;
+        let cosParam;
 
-        var xSqueeze = 0.75; //cheap 3D effect by shortening in x direction.
+        const xSqueeze = 0.75; //cheap 3D effect by shortening in x direction.
 
-        var yOffset;
+        let yOffset;
 
         //draw circles
         for (j = 0; j < this.settings.drawsPerFrame; j++) {
@@ -246,22 +221,19 @@ export class Smoke {
     }
 
     setLinePoints(iterations) {
-        var pointList = {
+        const pointList = {
             first: undefined
         };
         pointList.first = {x: 0, y: 1};
-        var lastPoint = {x: 1, y: 1}
-        var minY = 1;
-        var maxY = 1;
-        var point;
-        var nextPoint;
-        var dx, newX, newY;
-        var ratio;
-
-        var minRatio = 0.5;
+        const lastPoint = {x: 1, y: 1};
+        let minY = 1;
+        let maxY = 1;
+        let point;
+        let nextPoint;
+        let dx, newX, newY;
 
         pointList.first.next = lastPoint;
-        for (var i = 0; i < iterations; i++) {
+        for (let i = 0; i < iterations; i++) {
             point = pointList.first;
             while (point.next != null) {
                 nextPoint = point.next;
@@ -271,7 +243,7 @@ export class Smoke {
                 newY = 0.5 * (point.y + nextPoint.y);
                 newY += dx * (Math.random() * 2 - 1);
 
-                var newPoint = {x: newX, y: newY, next: undefined};
+                const newPoint = {x: newX, y: newY, next: undefined};
 
                 //min, max
                 if (newY < minY) {
@@ -290,7 +262,7 @@ export class Smoke {
 
         //normalize to values between 0 and 1
         if (maxY != minY) {
-            var normalizeRate = 1 / (maxY - minY);
+            const normalizeRate = 1 / (maxY - minY);
             point = pointList.first;
             while (point != null) {
                 point.y = normalizeRate * (point.y - minY);
@@ -309,27 +281,22 @@ export class Smoke {
         return pointList;
     }
 
-    setOption(optionName, optionValue) {
-        this.settings[optionName] = optionValue;
-    }
-
     hexToRGBA(hex, opacity) {
         hex = hex.replace('#', '');
         let r = parseInt(hex.substring(0, 2), 16);
         let g = parseInt(hex.substring(2, 4), 16);
         let b = parseInt(hex.substring(4, 6), 16);
 
-        let result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
-        return result;
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
     }
 
     download(width, height) {
         this.exportContext.drawImage(this.displayCanvas[0], 0, 0, width, height, 0, 0, width, height);
         //we will open a new window with the image contained within:
         //retrieve canvas image as data URL:
-        var dataURL = this.exportCanvas.toDataURL("image/png");
+        const dataURL = this.exportCanvas.toDataURL("image/png");
         //open a new window of appropriate size to hold the image:
-        var imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width=" + width + ",height=" + height + ",toolbar=0,resizable=0");
+        const imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width=" + width + ",height=" + height + ",toolbar=0,resizable=0");
         //write some html into the new window, creating an empty image:
         imageWindow.document.write("<title>Export Image</title>")
         imageWindow.document.write("<img id='exportImage'"
@@ -339,8 +306,33 @@ export class Smoke {
             + " style='position:absolute;left:0;top:0'/>");
         imageWindow.document.close();
         //copy the image into the empty img in the newly opened window:
-        var exportImage = imageWindow.document.getElementById("exportImage");
+        const exportImage = imageWindow.document.getElementById("exportImage");
         // @ts-ignore
         exportImage.src = dataURL;
+    }
+
+    setOption(optionName, optionValue) {
+        this.settings[optionName] = optionValue;
+    }
+
+    private initSettings() {
+        const radius = this.element.clientHeight * 0.8 / 2;
+        if (this.settings.maxMaxRad === 'auto') this.settings.maxMaxRad = radius;
+        if (this.settings.minMaxRad === 'auto') this.settings.minMaxRad = radius;
+    }
+
+    private initCanvas() {
+        this.displayCanvas = document.getElementsByTagName('canvas').item(0);
+        this.displayWidth = this.element.clientWidth;
+        this.displayHeight = this.element.clientHeight;
+        this.displayCanvas.width = this.displayWidth;
+        this.displayCanvas.height = this.displayHeight;
+        this.context = this.displayCanvas.getContext("2d");
+
+        //off-screen canvas used only when exporting image
+        this.exportCanvas = document.createElement('canvas');
+        this.exportCanvas.width = this.displayWidth;
+        this.exportCanvas.height = this.displayHeight;
+        this.exportContext = this.exportCanvas.getContext("2d");
     }
 }
