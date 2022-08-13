@@ -83,67 +83,7 @@ export class Smoke {
 
     }
 
-    fillBackground() {
-        const outerRad = Math.sqrt(this.displayWidth * this.displayWidth + this.displayHeight * this.displayHeight) / 2;
-        this.niceGradient = new SmokeNiceBG(this.displayWidth * 0.75, this.displayHeight / 2 * 0.75, 0, this.displayWidth / 2, this.displayHeight / 4, outerRad);
-
-        let hex = this.settings.bgColorInner.replace('#', '');
-
-        const r0 = parseInt(hex.substring(0, 2), 16),
-            g0 = parseInt(hex.substring(2, 4), 16),
-            b0 = parseInt(hex.substring(4, 6), 16);
-
-        hex = this.settings.bgColorOuter.replace('#', '');
-        const r1 = parseInt(hex.substring(0, 2), 16),
-            g1 = parseInt(hex.substring(2, 4), 16),
-            b1 = parseInt(hex.substring(4, 6), 16);
-
-        this.niceGradient.addColorStop(0, r0, g0, b0);
-        this.niceGradient.addColorStop(1, r1, g1, b1);
-        this.niceGradient.fillRect(this.context, 0, 0, this.displayWidth, this.displayHeight);
-    }
-
-    setCircles() {
-        let i;
-        let maxR, minR;
-        let grad;
-
-        this.circles = [];
-
-        for (i = 0; i < this.settings.numCircles; i++) {
-            // @ts-ignore
-            maxR = this.settings.minMaxRad + Math.random() * (this.settings.maxMaxRad - this.settings.minMaxRad);
-            minR = this.settings.minRadFactor * maxR;
-
-            //define gradient
-            grad = this.context.createRadialGradient(0, 0, minR, 0, 0, maxR);
-            const gradientStart = this.hexToRGBA(this.settings.gradientStart, this.settings.smokeOpacity),
-                gradientEnd = this.hexToRGBA(this.settings.gradientEnd, this.settings.smokeOpacity);
-
-            grad.addColorStop(1, gradientStart);
-            grad.addColorStop(0, gradientEnd);
-
-            const newCircle = {
-                centerX: -maxR,
-                centerY: this.displayHeight / 2 - 50,
-                maxRad: maxR,
-                minRad: minR,
-                color: grad, //can set a gradient or solid color here.
-                //fillColor: "rgba(0,0,0,1)",
-                param: 0,
-                changeSpeed: 1 / 250,
-                phase: Math.random() * TWO_PI, //the phase to use for a single fractal curve.
-                globalPhase: Math.random() * TWO_PI, //the curve as a whole will rise and fall by a sinusoid.
-                pointList1: undefined,
-                pointList2: undefined
-            };
-            this.circles.push(newCircle);
-            newCircle.pointList1 = this.setLinePoints(this.settings.iterations);
-            newCircle.pointList2 = this.setLinePoints(this.settings.iterations);
-        }
-    }
-
-    onTimer() {
+    public onTimer() {
         let i, j;
         let c;
         let rad;
@@ -220,7 +160,92 @@ export class Smoke {
         }
     }
 
-    setLinePoints(iterations) {
+    public download(width, height) {
+        this.exportContext.drawImage(this.displayCanvas[0], 0, 0, width, height, 0, 0, width, height);
+        //we will open a new window with the image contained within:
+        //retrieve canvas image as data URL:
+        const dataURL = this.exportCanvas.toDataURL("image/png");
+        //open a new window of appropriate size to hold the image:
+        const imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width=" + width + ",height=" + height + ",toolbar=0,resizable=0");
+        //write some html into the new window, creating an empty image:
+        imageWindow.document.write("<title>Export Image</title>")
+        imageWindow.document.write("<img id='exportImage'"
+            + " alt=''"
+            + " height='" + height + "'"
+            + " width='" + width + "'"
+            + " style='position:absolute;left:0;top:0'/>");
+        imageWindow.document.close();
+        //copy the image into the empty img in the newly opened window:
+        const exportImage = imageWindow.document.getElementById("exportImage");
+        // @ts-ignore
+        exportImage.src = dataURL;
+    }
+
+    public setOption<T>(optionName: string, optionValue: T) {
+        this.settings[optionName] = optionValue;
+    }
+
+    private fillBackground() {
+        const outerRad = Math.sqrt(this.displayWidth * this.displayWidth + this.displayHeight * this.displayHeight) / 2;
+        this.niceGradient = new SmokeNiceBG(this.displayWidth * 0.75, this.displayHeight / 2 * 0.75, 0, this.displayWidth / 2, this.displayHeight / 4, outerRad);
+
+        let hex = this.settings.bgColorInner.replace('#', '');
+
+        const r0 = parseInt(hex.substring(0, 2), 16),
+            g0 = parseInt(hex.substring(2, 4), 16),
+            b0 = parseInt(hex.substring(4, 6), 16);
+
+        hex = this.settings.bgColorOuter.replace('#', '');
+        const r1 = parseInt(hex.substring(0, 2), 16),
+            g1 = parseInt(hex.substring(2, 4), 16),
+            b1 = parseInt(hex.substring(4, 6), 16);
+
+        this.niceGradient.addColorStop(0, r0, g0, b0);
+        this.niceGradient.addColorStop(1, r1, g1, b1);
+        this.niceGradient.fillRect(this.context, 0, 0, this.displayWidth, this.displayHeight);
+    }
+
+    private setCircles() {
+        let i;
+        let maxR, minR;
+        let grad;
+
+        this.circles = [];
+
+        for (i = 0; i < this.settings.numCircles; i++) {
+            // @ts-ignore
+            maxR = this.settings.minMaxRad + Math.random() * (this.settings.maxMaxRad - this.settings.minMaxRad);
+            minR = this.settings.minRadFactor * maxR;
+
+            //define gradient
+            grad = this.context.createRadialGradient(0, 0, minR, 0, 0, maxR);
+            const gradientStart = this.hexToRGBA(this.settings.gradientStart, this.settings.smokeOpacity),
+                gradientEnd = this.hexToRGBA(this.settings.gradientEnd, this.settings.smokeOpacity);
+
+            grad.addColorStop(1, gradientStart);
+            grad.addColorStop(0, gradientEnd);
+
+            const newCircle = {
+                centerX: -maxR,
+                centerY: this.displayHeight / 2 - 50,
+                maxRad: maxR,
+                minRad: minR,
+                color: grad, //can set a gradient or solid color here.
+                //fillColor: "rgba(0,0,0,1)",
+                param: 0,
+                changeSpeed: 1 / 250,
+                phase: Math.random() * TWO_PI, //the phase to use for a single fractal curve.
+                globalPhase: Math.random() * TWO_PI, //the curve as a whole will rise and fall by a sinusoid.
+                pointList1: undefined,
+                pointList2: undefined
+            };
+            this.circles.push(newCircle);
+            newCircle.pointList1 = this.setLinePoints(this.settings.iterations);
+            newCircle.pointList2 = this.setLinePoints(this.settings.iterations);
+        }
+    }
+
+    private setLinePoints(iterations) {
         const pointList = {
             first: undefined
         };
@@ -281,38 +306,13 @@ export class Smoke {
         return pointList;
     }
 
-    hexToRGBA(hex, opacity) {
+    private hexToRGBA(hex, opacity) {
         hex = hex.replace('#', '');
         let r = parseInt(hex.substring(0, 2), 16);
         let g = parseInt(hex.substring(2, 4), 16);
         let b = parseInt(hex.substring(4, 6), 16);
 
         return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
-    }
-
-    download(width, height) {
-        this.exportContext.drawImage(this.displayCanvas[0], 0, 0, width, height, 0, 0, width, height);
-        //we will open a new window with the image contained within:
-        //retrieve canvas image as data URL:
-        const dataURL = this.exportCanvas.toDataURL("image/png");
-        //open a new window of appropriate size to hold the image:
-        const imageWindow = window.open("", "fractalLineImage", "left=0,top=0,width=" + width + ",height=" + height + ",toolbar=0,resizable=0");
-        //write some html into the new window, creating an empty image:
-        imageWindow.document.write("<title>Export Image</title>")
-        imageWindow.document.write("<img id='exportImage'"
-            + " alt=''"
-            + " height='" + height + "'"
-            + " width='" + width + "'"
-            + " style='position:absolute;left:0;top:0'/>");
-        imageWindow.document.close();
-        //copy the image into the empty img in the newly opened window:
-        const exportImage = imageWindow.document.getElementById("exportImage");
-        // @ts-ignore
-        exportImage.src = dataURL;
-    }
-
-    setOption(optionName, optionValue) {
-        this.settings[optionName] = optionValue;
     }
 
     private initSettings() {
