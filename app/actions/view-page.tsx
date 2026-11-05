@@ -2,14 +2,12 @@ import type { Handle, RemixNode } from "remix/component";
 import { css, clientEntry } from "remix/component";
 
 import { Document } from "./document";
-import { Canvas } from "~/ui/canvas.client";
-import { Controls } from "~/ui/controls.client";
+import { Interactive } from "~/ui/interactive.layout";
 
 export function ViewPage() {
   return () => (
     <Document head={<Head />}>
-      <Controls />
-      <Canvas />
+      <Interactive />
     </Document>
   );
 }
