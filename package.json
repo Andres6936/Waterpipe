@@ -1,0 +1,17 @@
+{
+  "name": "waterpipe.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "typecheck": "bun check"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "remix": "^3.2.0"
+  }
+}
