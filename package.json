@@ -3,6 +3,8 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "dev": "bun run server.ts",
+    "hmr": "bun run hmr.ts",
     "typecheck": "bun check"
   },
   "devDependencies": {

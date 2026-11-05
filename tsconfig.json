@@ -6,8 +6,9 @@
     "module": "Preserve",
     "moduleDetection": "force",
     "jsx": "react-jsx",
+    "jsxImportSource": "remix/component",
     "allowJs": true,
-    "types": ["bun"],
+    "types": ["bun", "remix/assets/types/hmr"],
 
     // Bundler mode
     "moduleResolution": "bundler",
@@ -25,6 +26,7 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    "noPropertyAccessFromIndexSignature": false,
+  },
+  "exclude": ["dist"],
 }

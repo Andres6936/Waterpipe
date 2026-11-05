@@ -1,4 +1,7 @@
 .idea/
 src/*.js
 
-node_modules
+node_modules/
+db/*.sqlite
+tmp/
+.DS_Store
