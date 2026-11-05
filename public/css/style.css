@@ -280,7 +280,7 @@ input[type="range"]:focus::-ms-track {
     margin-bottom: 5px;
 }
 .sidebar-wrapper .buttons-wrap {
-    position: absolute;
+    position: sticky;
     width: 100%;
     bottom: 0;
     padding: 10px 5px;
