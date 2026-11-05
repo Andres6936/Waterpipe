@@ -18,11 +18,16 @@ body {
     position: absolute;
     top: 0;
     left: 3%;
-    width: 200px;
+    width: 220px;
+    height: 95vh;
+    overflow-y: scroll;
     background: #fff;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.6);
+
+    scrollbar-width: thin;
+    scrollbar-color: gray transparent;
 }
 .sidebar-wrapper h1 {
     margin: 0;
