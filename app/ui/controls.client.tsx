@@ -5,6 +5,11 @@ type ControlContextProps = {
   gradientStart: string;
   gradientEnd: string;
   smokeOpacity: number;
+  radiusSize: number;
+  lineWidth: number;
+  numCircles: number;
+  bgColorOuter: string;
+  bgColorInner: string;
 };
 
 export const ControlContext = clientEntry(
@@ -16,6 +21,11 @@ export const ControlContext = clientEntry(
       gradientStart: "#000000",
       gradientEnd: "#222222",
       smokeOpacity: 10,
+      radiusSize: 100,
+      lineWidth: 2,
+      numCircles: 1,
+      bgColorOuter: "#666666",
+      bgColorInner: "#ffffff",
     });
 
     return () => handle.props.children;
@@ -93,7 +103,7 @@ export const Controls = clientEntry(
                   min="10"
                   max="300"
                   step="1"
-                  value="100"
+                  value={context.radiusSize}
                 />
               </div>
               <div class="input-group">
@@ -108,7 +118,7 @@ export const Controls = clientEntry(
                   min="0.1"
                   max="10"
                   step="0.1"
-                  value="2"
+                  value={context.lineWidth}
                 />
               </div>
               <div class="input-group">
@@ -123,7 +133,7 @@ export const Controls = clientEntry(
                   min="1"
                   max="5"
                   step="1"
-                  value="1"
+                  value={context.numCircles}
                 />
               </div>
               <h2>Background style</h2>
@@ -134,7 +144,7 @@ export const Controls = clientEntry(
                   id="bgColorOuter"
                   name="bgColorOuter"
                   class="color-picker color-outer"
-                  value="#666666"
+                  value={context.bgColorOuter}
                 />
               </div>
               <div class="input-group">
@@ -144,7 +154,7 @@ export const Controls = clientEntry(
                   id="bgColorInner"
                   name="bgColorInner"
                   class="color-picker color-inner"
-                  value="#ffffff"
+                  value={context.bgColorInner}
                 />
               </div>
               <h2>Download size</h2>
