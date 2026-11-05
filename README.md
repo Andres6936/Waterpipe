@@ -1,11 +1,12 @@
 # waterpipe.js - smoky backgrounds generator (HTML5 Canvas)
 
-waterpipe.js is a jQuery plugin for smoky backgrounds developed by [dragdropsite.com](http://www.dragdropsite.com)
+waterpipe.js is a vanilla JavaScript library for smoky backgrounds developed by [dragdropsite.com](http://www.dragdropsite.com)
 
 ![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/screenshot.jpg)
 
 ## Examples
-Here are some examples generated using waterpipe.js plugin. 
+
+Here are some examples generated using waterpipe.js:
 
 ![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-1.jpg)
 ![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-2.jpg)
@@ -22,21 +23,23 @@ Here are some examples generated using waterpipe.js plugin.
 
 ## Usage
 
-**1. Include jQuery and waterpipe.js**
+**1. Include waterpipe.js**
 
-    <script src="lib/jquery-1.11.0.min.js"></script>
-    <script src="waterpipe.js"></script>
+    <script src="src/Smoke.js" type="module"></script>
+    <script src="src/SmokeNiceBG.js" type="module"></script>
 
 **2. Create wrapper with canvas element inside**
 
-    <div id="wavybg-wrapper" style="width: 100%; height: 100%;"> 
+    <div id="wavybg-wrapper" style="width: 100%; height: 100%;">
         <canvas>Your browser does not support HTML5 canvas.</canvas>
     </div>
 
 **3. Initialize with**
 
-    var smokyBG = $('#wavybg-wrapper').waterpipe({
-        //Default values
+    import { Smoke } from "./src/Smoke.js";
+
+    const smokyBG = new Smoke(document.getElementById("wavybg-wrapper"), {
+        // Default values
         gradientStart: '#000000',
         gradientEnd: '#222222',
         smokeOpacity: 0.1,
@@ -55,7 +58,7 @@ Here are some examples generated using waterpipe.js plugin.
 ## Options
 
 | Option        | Type          | Default   | Description                                                                                                                                                                    |
-|---------------|---------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------- | ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | gradientStart | string        | '#000000' | Gradient start color in hex format.                                                                                                                                            |
 | gradientEnd   | string        | '#222222' | Gradient end color in hex format.                                                                                                                                              |
 | smokeOpacity  | number        | 0.1       | Smoke opacity 0 to 1.                                                                                                                                                          |
@@ -72,10 +75,10 @@ Here are some examples generated using waterpipe.js plugin.
 
 ## Methods
 
-The following code could be used to call a method: `smokyBG.data('waterpipe').generate();`Please make sure variable smokyBG exists
+The following code could be used to call a method: `smokyBG.generate();`
 
 | Method    | Arguments   | Description                                                                                     |
-|-----------|-------------|-------------------------------------------------------------------------------------------------|
+| --------- | ----------- | ----------------------------------------------------------------------------------------------- |
 | generate  |             | Generates background canvas                                                                     |
 | setOption | optionName, | Set a new value to an option. Please check the above table for possible option names and values |
 |           | optionValue |                                                                                                 |
