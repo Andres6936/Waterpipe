@@ -38,7 +38,7 @@ export const Controls = clientEntry(
     return () => {
       const context = handle.context.get(ControlContext);
       if (!context) {
-        return <div class="sidebar-wrapper">Initializing...</div>;
+        return null;
       }
 
       return (
