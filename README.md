@@ -2,7 +2,7 @@
 
 waterpipe.js is a vanilla JavaScript library for smoky backgrounds developed by [dragdropsite.com](http://www.dragdropsite.com)
 
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/screenshot.jpg)
+![alt tag](./public/img/screenshot.jpg)
 
 ## Examples
 
