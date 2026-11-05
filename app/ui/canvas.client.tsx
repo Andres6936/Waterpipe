@@ -1,6 +1,5 @@
 import type { Handle, RemixNode } from "remix/component";
 import { css, ref, clientEntry } from "remix/component";
-import { CommentDirectiveType } from "typescript/unstable/ast";
 import { Smoke } from "~/actions/public/Smoke";
 
 export const Canvas = clientEntry(import.meta.url, function Canvas() {
