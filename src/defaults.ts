@@ -2,6 +2,7 @@ export type Defaults = {
   gradientStart: string;
   gradientEnd: string;
   smokeOpacity: number;
+  radiusSize: number;
   numCircles: number;
   maxMaxRad: number | string;
   minMaxRad: number | string;
@@ -17,6 +18,7 @@ export type Defaults = {
 export const defaults: Defaults = {
   gradientStart: "#000000",
   gradientEnd: "#222222",
+  radiusSize: 100,
   smokeOpacity: 0.1,
   numCircles: 1,
   maxMaxRad: "auto",
