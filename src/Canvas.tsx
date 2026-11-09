@@ -8,7 +8,7 @@ const Canvas = () => {
   React.useEffect(
     function startUp() {
       if (!ref.current) return;
-      context.drawAt(ref.current);
+      context.setCanvas(ref.current);
     },
     [ref],
   );

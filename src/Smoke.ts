@@ -1,20 +1,15 @@
 import { defaults, type Defaults } from "./defaults";
 import { SmokeNiceBG } from "./SmokeNiceBG";
 
-const pluginName = "waterpipe";
-
 const TWO_PI = 2 * Math.PI;
 
 export class Smoke {
-  private element: HTMLCanvasElement;
   private settings: Defaults;
   private drawCount: number;
   private displayCanvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private displayHeight: number;
   private displayWidth: number;
-  private _defaults: Defaults;
-  private _name: string;
   private niceGradient: SmokeNiceBG;
   private circles: any[];
 
@@ -24,23 +19,18 @@ export class Smoke {
 
   constructor(options: Defaults) {
     this.settings = { ...defaults, ...options };
-    this._defaults = defaults;
-    this._name = pluginName;
   }
 
-  public drawAt(element: HTMLCanvasElement) {
-    this.element = element;
-
-    // Init settings
-    const radius = (this.element.clientHeight * 0.8) / 2;
+  public setCanvas(canvas: HTMLCanvasElement) {
+    const radius = (canvas.clientHeight * 0.8) / 2;
     if (this.settings.maxMaxRad === "auto") this.settings.maxMaxRad = radius;
     if (this.settings.minMaxRad === "auto") this.settings.minMaxRad = radius;
 
-    this.displayWidth = this.element.clientWidth;
-    this.displayHeight = this.element.clientHeight;
-    this.element.width = this.element.clientWidth;
-    this.element.height = this.element.clientHeight;
-    this.context = this.element.getContext("2d")!;
+    this.displayWidth = canvas.clientWidth;
+    this.displayHeight = canvas.clientHeight;
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    this.context = canvas.getContext("2d")!;
 
     this.drawCount = 0;
     this.context.setTransform(1, 0, 0, 1, 0, 0);

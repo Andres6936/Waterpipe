@@ -5,7 +5,7 @@ import { defaults, type Defaults } from "./defaults";
 type ContextProps = Defaults & {
   start: () => void;
   stop: () => void;
-  drawAt: (canvas: HTMLCanvasElement) => void;
+  setCanvas: (canvas: HTMLCanvasElement) => void;
   setValue: (key: keyof Defaults, value: Defaults[keyof Defaults]) => void;
 };
 
@@ -26,7 +26,8 @@ const Provider = (props: React.PropsWithChildren<{}>) => {
       value={{
         ...values,
         setValue,
-        drawAt: (canvas: HTMLCanvasElement) => smoke.current.drawAt(canvas),
+        setCanvas: (canvas: HTMLCanvasElement) =>
+          smoke.current.setCanvas(canvas),
         start: () => smoke.current.start(),
         stop: () => smoke.current.stop(),
       }}
