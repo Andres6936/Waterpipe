@@ -50,7 +50,7 @@ const Controls = () => {
               className="smokeOpacity-slider"
               min="0"
               max="1"
-              step="0.1"
+              step="0.05"
               value={context.smokeOpacity}
               onChange={({ currentTarget }) =>
                 context.setValue("smokeOpacity", currentTarget.valueAsNumber)
@@ -191,7 +191,12 @@ const Controls = () => {
 
       <div className="flex flex-col buttons-wrap">
         <div className="btn btn-grey btn-samples">Samples</div>
-        <div className="btn btn-grey btn-generate">Generate</div>
+        <div
+          className="btn btn-grey btn-generate"
+          onClick={() => context.update()}
+        >
+          Generate
+        </div>
         <div className="btn btn-grey btn-download">Download</div>
       </div>
     </div>

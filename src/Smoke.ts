@@ -6,6 +6,7 @@ const TWO_PI = 2 * Math.PI;
 export class Smoke {
   private settings: Defaults;
   private drawCount: number;
+  private canvas: HTMLCanvasElement;
   private displayCanvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private displayHeight: number;
@@ -21,22 +22,30 @@ export class Smoke {
     this.settings = { ...defaults, ...options };
   }
 
-  public setCanvas(canvas: HTMLCanvasElement) {
-    const radius = (canvas.clientHeight * 0.8) / 2;
-    if (this.settings.maxMaxRad === "auto") this.settings.maxMaxRad = radius;
-    if (this.settings.minMaxRad === "auto") this.settings.minMaxRad = radius;
+  public setSettings(_settings: Partial<Defaults>) {
+    this.settings = { ...this.settings, ..._settings };
+  }
 
+  public setCanvas(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
     this.displayWidth = canvas.clientWidth;
     this.displayHeight = canvas.clientHeight;
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     this.context = canvas.getContext("2d")!;
 
+    this.clear();
+  }
+
+  public clear() {
     this.drawCount = 0;
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.displayWidth, this.displayHeight);
     this.fillBackground();
 
+    const radius = (this.canvas.clientHeight * 0.8) / 2;
+    if (this.settings.maxMaxRad === "auto") this.settings.maxMaxRad = radius;
+    if (this.settings.minMaxRad === "auto") this.settings.minMaxRad = radius;
     this.setCircles();
   }
 
