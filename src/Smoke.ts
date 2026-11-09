@@ -8,7 +8,6 @@ const isNumber = (value: unknown): value is number =>
 
 export class Smoke {
   private drawCount: number;
-  private canvas: HTMLCanvasElement;
   private displayCanvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private displayHeight: number;
@@ -31,7 +30,6 @@ export class Smoke {
   }
 
   public setCanvas(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
     this.displayWidth = canvas.clientWidth;
     this.displayHeight = canvas.clientHeight;
     canvas.width = canvas.clientWidth;
