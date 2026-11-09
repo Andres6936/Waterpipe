@@ -4,8 +4,8 @@ export type Defaults = {
   smokeOpacity: number;
   radiusSize: number;
   numCircles: number;
-  maxMaxRad: number | string;
-  minMaxRad: number | string;
+  maxMaxRad: number | "auto";
+  minMaxRad: number | "auto";
   minRadFactor: number;
   iterations: number;
   drawsPerFrame: number;

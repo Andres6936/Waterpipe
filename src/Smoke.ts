@@ -3,8 +3,10 @@ import { SmokeNiceBG } from "./SmokeNiceBG";
 
 const TWO_PI = 2 * Math.PI;
 
+const isNumber = (value: unknown): value is number =>
+  typeof value === "number" && !Number.isNaN(value);
+
 export class Smoke {
-  private settings: Defaults;
   private drawCount: number;
   private canvas: HTMLCanvasElement;
   private displayCanvas: HTMLCanvasElement;
@@ -13,6 +15,8 @@ export class Smoke {
   private displayWidth: number;
   private niceGradient: SmokeNiceBG;
   private circles: any[];
+  private radius: number;
+  private settings: Defaults;
 
   // Animation loop state (per instance, so several canvases can coexist).
   private rafId: number | null = null;
@@ -33,6 +37,7 @@ export class Smoke {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     this.context = canvas.getContext("2d")!;
+    this.radius = (canvas.clientHeight * 0.8) / 2;
 
     this.clear();
   }
@@ -41,11 +46,8 @@ export class Smoke {
     this.drawCount = 0;
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.displayWidth, this.displayHeight);
-    this.fillBackground();
 
-    const radius = (this.canvas.clientHeight * 0.8) / 2;
-    if (this.settings.maxMaxRad === "auto") this.settings.maxMaxRad = radius;
-    if (this.settings.minMaxRad === "auto") this.settings.minMaxRad = radius;
+    this.fillBackground();
     this.setCircles();
   }
 
@@ -138,8 +140,11 @@ export class Smoke {
         yOffset =
           40 * Math.sin(c.globalPhase + (this.drawCount / 1000) * TWO_PI);
         // Stop when off screen
-        // @ts-ignore
-        if (c.centerX > this.displayWidth + this.settings.maxMaxRad) {
+        const maxRadial =
+          this.settings.maxMaxRad === "auto"
+            ? this.radius
+            : this.settings.maxMaxRad;
+        if (c.centerX > this.displayWidth + maxRadial) {
           return false;
         }
 
@@ -266,6 +271,20 @@ export class Smoke {
     );
   }
 
+  private getMaximumRadial() {
+    if (
+      isNumber(this.settings.maxMaxRad) &&
+      isNumber(this.settings.minMaxRad)
+    ) {
+      return (
+        this.settings.minMaxRad +
+        Math.random() * (this.settings.maxMaxRad - this.settings.minMaxRad)
+      );
+    } else {
+      return this.radius + Math.random() * (this.radius - this.radius);
+    }
+  }
+
   private setCircles() {
     let i;
     let maxR, minR;
@@ -274,10 +293,7 @@ export class Smoke {
     this.circles = [];
 
     for (i = 0; i < this.settings.numCircles; i++) {
-      // @ts-ignore
-      maxR =
-        this.settings.minMaxRad +
-        Math.random() * (this.settings.maxMaxRad - this.settings.minMaxRad);
+      maxR = this.getMaximumRadial();
       minR = this.settings.minRadFactor * maxR;
 
       //define gradient
