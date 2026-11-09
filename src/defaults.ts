@@ -25,7 +25,7 @@ export const defaults: Defaults = {
   minMaxRad: "auto",
   minRadFactor: 0,
   iterations: 8,
-  drawsPerFrame: 10,
+  drawsPerFrame: 14,
   lineWidth: 2,
   speed: 1,
   //Background

@@ -4,8 +4,6 @@ import { SmokeNiceBG } from "./SmokeNiceBG";
 const pluginName = "waterpipe";
 
 const TWO_PI = 2 * Math.PI;
-let timer: ReturnType<typeof setInterval>;
-let inst;
 
 export class Smoke {
   private element: HTMLCanvasElement;
@@ -20,8 +18,11 @@ export class Smoke {
   private niceGradient: SmokeNiceBG;
   private circles: any[];
 
+  // Animation loop state (per instance, so several canvases can coexist).
+  private rafId: number | null = null;
+  private running = false;
+
   constructor(options: Defaults) {
-    inst = this;
     this.settings = { ...defaults, ...options };
     this._defaults = defaults;
     this._name = pluginName;
@@ -47,16 +48,50 @@ export class Smoke {
     this.fillBackground();
 
     this.setCircles();
-
-    // if (timer) {
-    //   clearInterval(timer);
-    // }
-    // timer = setInterval(() => {
-    //   inst.onTimer();
-    // }, inst.settings.speed);
   }
 
-  public onTimer() {
+  /** Starts the animation loop. Safe to call multiple times. */
+  public start() {
+    if (this.running) return;
+
+    this.running = true;
+    this.rafId = requestAnimationFrame(this.loop);
+  }
+
+  /** Stops the animation loop. */
+  public stop() {
+    this.running = false;
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
+
+  /** Stops the animation and releases the per-run state. */
+  public destroy() {
+    this.stop();
+    this.circles = [];
+  }
+
+  private loop = () => {
+    if (!this.running) return;
+
+    // Exactly one simulation step per display frame. The whole frame's work
+    // stays tiny (~drawsPerFrame curves), so the browser never blows its
+    // ~16.7ms budget: that is what keeps the motion fluid. The trade-off is
+    // that the smoke advances ~4x slower than the old setInterval(..., 1),
+    // which is intentional. To speed it up without losing smoothness, raise
+    // `drawsPerFrame` (and/or `iterations`) instead of adding steps per frame.
+    if (!this.onTimer()) {
+      this.stop();
+      return;
+    }
+
+    this.rafId = requestAnimationFrame(this.loop);
+  };
+
+  /** Advances the simulation by one step. Returns false when it is done. */
+  public onTimer(): boolean {
     let i, j;
     let c;
     let rad;
@@ -103,11 +138,10 @@ export class Smoke {
         c.centerY += 0.04;
         yOffset =
           40 * Math.sin(c.globalPhase + (this.drawCount / 1000) * TWO_PI);
-        //stop when off screen
+        // Stop when off screen
         // @ts-ignore
         if (c.centerX > this.displayWidth + this.settings.maxMaxRad) {
-          clearInterval(timer);
-          timer = null;
+          return false;
         }
 
         //we are drawing in new position by applying a transform. We are doing this so the gradient will move with the drawing.
@@ -143,6 +177,8 @@ export class Smoke {
         //context.fill();
       }
     }
+
+    return true;
   }
 
   public download(width: number, height: number) {

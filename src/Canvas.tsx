@@ -17,8 +17,11 @@ const Canvas = () => {
 
   React.useEffect(
     function animation() {
-      if (!smoke.current) return;
-      setInterval(() => smoke.current.onTimer(), 1);
+      const instance = smoke.current;
+      if (!instance) return;
+
+      instance.start();
+      return () => instance.stop();
     },
     [smoke],
   );
