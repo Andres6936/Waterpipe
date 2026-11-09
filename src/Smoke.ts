@@ -20,12 +20,15 @@ export class Smoke {
   private niceGradient: SmokeNiceBG;
   private circles: any[];
 
-  constructor(element: HTMLCanvasElement, options) {
-    this.element = element;
+  constructor(options: Defaults) {
     inst = this;
     this.settings = { ...defaults, ...options };
     this._defaults = defaults;
     this._name = pluginName;
+  }
+
+  public drawAt(element: HTMLCanvasElement) {
+    this.element = element;
 
     // Init settings
     const radius = (this.element.clientHeight * 0.8) / 2;
@@ -38,10 +41,6 @@ export class Smoke {
     this.element.height = this.element.clientHeight;
     this.context = this.element.getContext("2d")!;
 
-    this.generate();
-  }
-
-  public generate() {
     this.drawCount = 0;
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.displayWidth, this.displayHeight);
@@ -49,12 +48,12 @@ export class Smoke {
 
     this.setCircles();
 
-    if (timer) {
-      clearInterval(timer);
-    }
-    timer = setInterval(() => {
-      inst.onTimer();
-    }, inst.settings.speed);
+    // if (timer) {
+    //   clearInterval(timer);
+    // }
+    // timer = setInterval(() => {
+    //   inst.onTimer();
+    // }, inst.settings.speed);
   }
 
   public onTimer() {
