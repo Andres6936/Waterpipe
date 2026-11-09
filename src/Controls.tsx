@@ -5,14 +5,8 @@ const Controls = () => {
 
   return (
     <div className="absolute (top:2%) (bottom:2%) (left:2%) (width:220px) flex flex-col sidebar-wrapper">
-      <div className="intro">
-        <h1>waterpipe.js</h1>
-        <div className="created-by">
-          by
-          <a href="http://www.dragdropsite.com" target="_blank">
-            dragdropsite.com
-          </a>
-        </div>
+      <div className="flex intro">
+        <h1>Waterpipe.js</h1>
       </div>
 
       <div className="flex grow(1) generator-form-wrap">
@@ -170,7 +164,7 @@ const Controls = () => {
         </form>
       </div>
 
-      <div className="buttons-wrap">
+      <div className="flex flex-col buttons-wrap">
         <div className="btn btn-grey btn-samples">Samples</div>
         <div className="btn btn-grey btn-generate">Generate</div>
         <div className="btn btn-grey btn-download">Download</div>
