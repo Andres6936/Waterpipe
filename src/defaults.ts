@@ -10,7 +10,6 @@ export type Defaults = {
   iterations: number;
   drawsPerFrame: number;
   lineWidth: number;
-  speed: number;
   bgColorInner: string;
   bgColorOuter: string;
 };
@@ -27,7 +26,6 @@ export const defaults: Defaults = {
   iterations: 8,
   drawsPerFrame: 14,
   lineWidth: 2,
-  speed: 1,
   //Background
   bgColorInner: "#ffffff",
   bgColorOuter: "#666666",
