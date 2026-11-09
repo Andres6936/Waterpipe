@@ -7,8 +7,7 @@ const Controls = () => {
   const onSelectSample = (index: number) => {
     const sample = SAMPLES.at(index);
     if (sample) {
-      context.setValues(sample);
-      context.update();
+      context.update(sample);
     }
   };
 

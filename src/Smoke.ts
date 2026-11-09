@@ -42,6 +42,14 @@ export class Smoke {
     this.clear();
   }
 
+  public update(settings?: Partial<Defaults>) {
+    if (settings) {
+      this.setSettings(settings);
+    }
+    this.clear();
+    this.start();
+  }
+
   public clear() {
     this.drawCount = 0;
     this.context.setTransform(1, 0, 0, 1, 0, 0);
