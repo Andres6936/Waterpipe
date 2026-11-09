@@ -40,7 +40,8 @@ const Controls = () => {
           </div>
           <div className="input-group">
             <label htmlFor="smokeOpacity">
-              Opacity: <span className="value">{context.smokeOpacity}%</span>
+              Opacity:{" "}
+              <span className="value">{context.smokeOpacity * 100}%</span>
             </label>
             <input
               type="range"
@@ -48,8 +49,8 @@ const Controls = () => {
               name="smokeOpacity"
               className="smokeOpacity-slider"
               min="0"
-              max="100"
-              step="5"
+              max="1"
+              step="0.1"
               value={context.smokeOpacity}
               onChange={({ currentTarget }) =>
                 context.setValue("smokeOpacity", currentTarget.valueAsNumber)
