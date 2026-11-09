@@ -1,15 +1,26 @@
 import React from "react";
 import { defaults, type Defaults } from "./defaults";
 
-type ContextProps = Defaults & {};
+type ContextProps = Defaults & {
+  setValue: (key: keyof Defaults, value: Defaults[keyof Defaults]) => void;
+};
 
 const Context = React.createContext<ContextProps | null>(null);
 
 const Provider = (props: React.PropsWithChildren<{}>) => {
+  const [values, setValues] = React.useState(defaults);
+
+  const setValue = (key: keyof Defaults, value: Defaults[keyof Defaults]) =>
+    setValues({
+      ...values,
+      [key]: value,
+    });
+
   return (
     <Context.Provider
       value={{
-        ...defaults,
+        ...values,
+        setValue,
       }}
     >
       {props.children}

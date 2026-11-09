@@ -20,6 +20,9 @@ const Controls = () => {
               name="gradientStart"
               value={context.gradientStart}
               className="color-picker gradient-start"
+              onChange={({ currentTarget }) =>
+                context.setValue("gradientStart", currentTarget.value)
+              }
             />
           </div>
           <div className="input-group">
@@ -30,11 +33,14 @@ const Controls = () => {
               name="gradientEnd"
               className="color-picker gradient-end"
               value={context.gradientEnd}
+              onChange={({ currentTarget }) =>
+                context.setValue("gradientEnd", currentTarget.value)
+              }
             />
           </div>
           <div className="input-group">
             <label htmlFor="smokeOpacity">
-              Opacity: <span className="value">10%</span>
+              Opacity: <span className="value">{context.smokeOpacity}%</span>
             </label>
             <input
               type="range"
@@ -45,11 +51,14 @@ const Controls = () => {
               max="100"
               step="5"
               value={context.smokeOpacity}
+              onChange={({ currentTarget }) =>
+                context.setValue("smokeOpacity", currentTarget.valueAsNumber)
+              }
             />
           </div>
           <div className="input-group">
             <label htmlFor="radiusSize">
-              Smoke size: <span className="value">100%</span>
+              Smoke size: <span className="value">{context.radiusSize}%</span>
             </label>
             <input
               type="range"
@@ -60,11 +69,14 @@ const Controls = () => {
               max="300"
               step="1"
               value={context.radiusSize}
+              onChange={({ currentTarget }) =>
+                context.setValue("radiusSize", currentTarget.valueAsNumber)
+              }
             />
           </div>
           <div className="input-group">
             <label htmlFor="lineWidth">
-              Line width: <span className="value">2px</span>
+              Line width: <span className="value">{context.lineWidth}px</span>
             </label>
             <input
               type="range"
@@ -75,11 +87,14 @@ const Controls = () => {
               max="10"
               step="0.1"
               value={context.lineWidth}
+              onChange={({ currentTarget }) =>
+                context.setValue("lineWidth", currentTarget.valueAsNumber)
+              }
             />
           </div>
           <div className="input-group">
             <label htmlFor="numCircles">
-              Smokes #: <span className="value">1</span>
+              Smokes #: <span className="value">{context.numCircles}</span>
             </label>
             <input
               type="range"
@@ -90,6 +105,9 @@ const Controls = () => {
               max="5"
               step="1"
               value={context.numCircles}
+              onChange={({ currentTarget }) =>
+                context.setValue("numCircles", currentTarget.valueAsNumber)
+              }
             />
           </div>
           <h2>Background style</h2>
@@ -101,6 +119,9 @@ const Controls = () => {
               name="bgColorOuter"
               className="color-picker color-outer"
               value={context.bgColorOuter}
+              onChange={({ currentTarget }) =>
+                context.setValue("bgColorOuter", currentTarget.value)
+              }
             />
           </div>
           <div className="input-group">
@@ -111,6 +132,9 @@ const Controls = () => {
               name="bgColorInner"
               className="color-picker color-inner"
               value={context.bgColorInner}
+              onChange={({ currentTarget }) =>
+                context.setValue("bgColorInner", currentTarget.value)
+              }
             />
           </div>
           <h2>Download size</h2>
