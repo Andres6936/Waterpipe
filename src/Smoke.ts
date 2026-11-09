@@ -30,6 +30,8 @@ export class Smoke {
   }
 
   public setCanvas(canvas: HTMLCanvasElement) {
+    if (!canvas) throw new Error("The canvas element is null");
+
     this.displayWidth = canvas.clientWidth;
     this.displayHeight = canvas.clientHeight;
     canvas.width = canvas.clientWidth;
