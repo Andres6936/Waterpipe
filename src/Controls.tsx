@@ -4,7 +4,7 @@ const Controls = () => {
   const context = useContext();
 
   return (
-    <div className="sidebar-wrapper">
+    <div className="absolute (top:2%) (bottom:2%) (left:2%) (width:220px) flex flex-col sidebar-wrapper">
       <div className="intro">
         <h1>waterpipe.js</h1>
         <div className="created-by">
@@ -14,8 +14,8 @@ const Controls = () => {
           </a>
         </div>
       </div>
-      <div></div>
-      <div className="generator-form-wrap">
+
+      <div className="flex grow(1) generator-form-wrap">
         <form className="generator-params">
           <h2>Smoke style</h2>
           <div className="input-group">
@@ -169,6 +169,7 @@ const Controls = () => {
           </div>
         </form>
       </div>
+
       <div className="buttons-wrap">
         <div className="btn btn-grey btn-samples">Samples</div>
         <div className="btn btn-grey btn-generate">Generate</div>

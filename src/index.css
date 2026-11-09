@@ -1,3 +1,5 @@
+@import "@master/css";
+
 body,
 html,
 #root {
@@ -16,19 +18,10 @@ body {
 .sidebar-wrapper {
     padding: 0;
     margin: 10px 0;
-    position: absolute;
-    top: 0;
-    left: 3%;
-    width: 220px;
-    height: 95vh;
-    overflow-y: scroll;
     background: #fff;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.6);
-
-    scrollbar-width: thin;
-    scrollbar-color: gray transparent;
 }
 .sidebar-wrapper h1 {
     margin: 0;
@@ -124,8 +117,9 @@ body {
     margin-top: 78px;
     margin-bottom: 150px;
     overflow: hidden;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
+
+    scrollbar-width: thin;
+    scrollbar-color: gray transparent;
 }
 .sidebar-wrapper .samples img {
     max-width: 100%;
@@ -138,8 +132,6 @@ body {
     bottom: 0;
     padding: 10px 5px;
     background: #2c3e50;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
     z-index: 8888;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.6);
 }
@@ -178,99 +170,7 @@ body {
 .btn-download {
     background: #16a085;
 }
-/* Color picker native inputs */
-input[type="color"] {
-    width: 120px;
-    height: 30px;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    appearance: none;
-}
-input[type="color"]::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-input[type="color"]::-webkit-color-swatch {
-    border: none;
-    padding: 0;
-}
-input[type="color"]::-moz-color-swatch {
-    border: none;
-    padding: 0;
-}
-/* Range slider styling */
-input[type="range"] {
-    -webkit-appearance: none;
-    margin: 0;
-    padding: 0;
-}
-input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 8px;
-    background: #ddd;
-    border: none;
-    border-radius: 4px;
-}
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #3498db;
-    border-radius: 50%;
-    margin-top: -6px;
-}
-input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 8px;
-    background: #ddd;
-    border: none;
-    border-radius: 4px;
-}
-input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #3498db;
-    border: none;
-    border-radius: 50%;
-}
-input[type="range"]::-ms-track {
-    width: 100%;
-    height: 8px;
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
-}
-input[type="range"]::-ms-fill-lower {
-    background: #ddd;
-    border: none;
-    border-radius: 4px;
-}
-input[type="range"]::-ms-fill-upper {
-    background: #ddd;
-    border: none;
-    border-radius: 4px;
-}
-input[type="range"]::-ms-thumb {
-    width: 20px;
-    height: 20px;
-    background: #3498db;
-    border: none;
-    border-radius: 50%;
-    margin-top: 0;
-}
-input[type="range"]:focus {
-    outline: none;
-}
-input[type="range"]:focus::-webkit-slider-runnable-track {
-    background: #ccc;
-}
-input[type="range"]:focus::-moz-range-track {
-    background: #ccc;
-}
-input[type="range"]:focus::-ms-track {
-    background: #ccc;
-}
+
 .sidebar-wrapper .generator-form-wrap {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -281,9 +181,7 @@ input[type="range"]:focus::-ms-track {
     margin-bottom: 5px;
 }
 .sidebar-wrapper .buttons-wrap {
-    position: sticky;
     width: 100%;
-    bottom: 0;
     padding: 10px 5px;
     background: #2c3e50;
     box-sizing: border-box;
