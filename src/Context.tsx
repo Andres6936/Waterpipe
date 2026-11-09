@@ -8,6 +8,7 @@ type ContextProps = Defaults & {
   update: () => void;
   setCanvas: (canvas: HTMLCanvasElement) => void;
   setValue: (key: keyof Defaults, value: Defaults[keyof Defaults]) => void;
+  setValues: (values: Partial<Defaults>) => void;
 };
 
 const Context = React.createContext<ContextProps | null>(null);
@@ -22,11 +23,18 @@ const Provider = (props: React.PropsWithChildren<{}>) => {
       [key]: value,
     });
 
+  const setOverwriteValues = (options: Partial<Defaults>) =>
+    setValues({
+      ...values,
+      ...options,
+    });
+
   return (
     <Context.Provider
       value={{
         ...values,
         setValue,
+        setValues: setOverwriteValues,
         setCanvas: (canvas: HTMLCanvasElement) =>
           smoke.current.setCanvas(canvas),
         start: () => smoke.current.start(),

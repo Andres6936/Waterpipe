@@ -1,7 +1,16 @@
 import { useContext } from "./Context";
+import { SAMPLES } from "./Samples";
 
 const Controls = () => {
   const context = useContext();
+
+  const onSelectSample = (index: number) => {
+    const sample = SAMPLES.at(index);
+    if (sample) {
+      context.setValues(sample);
+      context.update();
+    }
+  };
 
   return (
     <div className="absolute (top:2%) (bottom:2%) (left:2%) (width:220px) flex flex-col sidebar-wrapper">
@@ -149,40 +158,100 @@ const Controls = () => {
           </div>
           <h2 id="samples-section">Samples (click to generate)</h2>
           <div className="input-group samples">
-            <a href="#" className="sample-smoke" data-id="0">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="0"
+              onClick={() => onSelectSample(0)}
+            >
               <img src="img/samples/small/sample-1.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="1">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="1"
+              onClick={() => onSelectSample(1)}
+            >
               <img src="img/samples/small/sample-2.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="2">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="2"
+              onClick={() => onSelectSample(2)}
+            >
               <img src="img/samples/small/sample-3.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="3">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="3"
+              onClick={() => onSelectSample(3)}
+            >
               <img src="img/samples/small/sample-4.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="4">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="4"
+              onClick={() => onSelectSample(4)}
+            >
               <img src="img/samples/small/sample-5.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="5">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="5"
+              onClick={() => onSelectSample(5)}
+            >
               <img src="img/samples/small/sample-6.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="6">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="6"
+              onClick={() => onSelectSample(6)}
+            >
               <img src="img/samples/small/sample-7.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="7">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="7"
+              onClick={() => onSelectSample(7)}
+            >
               <img src="img/samples/small/sample-8.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="8">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="8"
+              onClick={() => onSelectSample(8)}
+            >
               <img src="img/samples/small/sample-9.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="9">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="9"
+              onClick={() => onSelectSample(9)}
+            >
               <img src="img/samples/small/sample-10.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="10">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="10"
+              onClick={() => onSelectSample(10)}
+            >
               <img src="img/samples/small/sample-11.jpg" alt="" />
             </a>
-            <a href="#" className="sample-smoke" data-id="11">
+            <a
+              href="#"
+              className="sample-smoke"
+              data-id="11"
+              onClick={() => onSelectSample(11)}
+            >
               <img src="img/samples/small/sample-12.jpg" alt="" />
             </a>
           </div>
