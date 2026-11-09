@@ -1,16 +1,20 @@
-import { useRef } from "react";
+import React from "react";
 import { Smoke } from "./Smoke";
+import { useContext } from "./Context";
 
 const Canvas = () => {
-  return (
-    <canvas
-      style={{ width: "100%", height: "100%" }}
-      ref={(ref) => {
-        if (!ref) return null;
-        const smoke = new Smoke(ref, {});
-      }}
-    />
+  const ref = React.useRef<HTMLCanvasElement | null>(null);
+  const context = useContext();
+
+  React.useEffect(
+    function startUp() {
+      if (!ref.current) return;
+      new Smoke(ref.current, context);
+    },
+    [ref],
   );
+
+  return <canvas style={{ width: "100%", height: "100%" }} ref={ref} />;
 };
 
 export { Canvas };
