@@ -8,33 +8,28 @@ waterpipe.js is a vanilla JavaScript library for smoky backgrounds developed by 
 
 Here are some examples generated using waterpipe.js:
 
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-1.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-2.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-3.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-4.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-5.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-6.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-7.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-8.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-9.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-10.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-11.jpg)
-![alt tag](https://raw.github.com/dragdropsite/waterpipe.js/master/img/samples/sample-12.jpg)
+![alt tag](./public/img/samples/sample-1.jpg)
+![alt tag](./public/img/samples/sample-2.jpg)
+![alt tag](./public/img/samples/sample-3.jpg)
+![alt tag](./public/img/samples/sample-4.jpg)
+![alt tag](./public/img/samples/sample-5.jpg)
+![alt tag](./public/img/samples/sample-6.jpg)
+![alt tag](./public/img/samples/sample-7.jpg)
+![alt tag](./public/img/samples/sample-8.jpg)
+![alt tag](./public/img/samples/sample-9.jpg)
+![alt tag](./public/img/samples/sample-10.jpg)
+![alt tag](./public/img/samples/sample-11.jpg)
+![alt tag](./public/img/samples/sample-12.jpg)
 
 ## Usage
 
-**1. Include waterpipe.js**
-
-    <script src="src/Smoke.js" type="module"></script>
-    <script src="src/SmokeNiceBG.js" type="module"></script>
-
-**2. Create wrapper with canvas element inside**
+**1. Create wrapper with canvas element inside**
 
     <div id="wavybg-wrapper" style="width: 100%; height: 100%;">
         <canvas>Your browser does not support HTML5 canvas.</canvas>
     </div>
 
-**3. Initialize with**
+**2. Initialize with**
 
     import { Smoke } from "./src/Smoke.js";
 
@@ -84,10 +79,6 @@ The following code could be used to call a method: `smokyBG.generate();`
 |           | optionValue |                                                                                                 |
 | download  | width: int, | Download size in pixels                                                                         |
 |           | height: int |                                                                                                 |
-
-## Demo
-
-Please check the demo to generate and download your own smoky backgrounds: [http://dragdropsite.github.io/waterpipe.js](http://dragdropsite.github.io/waterpipe.js)
 
 ## Credits
 
