@@ -21,35 +21,6 @@ Here are some examples generated using waterpipe.js:
 ![alt tag](./public/img/samples/sample-11.jpg)
 ![alt tag](./public/img/samples/sample-12.jpg)
 
-## Usage
-
-**1. Create wrapper with canvas element inside**
-
-    <div id="wavybg-wrapper" style="width: 100%; height: 100%;">
-        <canvas>Your browser does not support HTML5 canvas.</canvas>
-    </div>
-
-**2. Initialize with**
-
-    import { Smoke } from "./src/Smoke.js";
-
-    const smokyBG = new Smoke(document.getElementById("wavybg-wrapper"), {
-        // Default values
-        gradientStart: '#000000',
-        gradientEnd: '#222222',
-        smokeOpacity: 0.1,
-        numCircles: 1,
-        maxMaxRad: 'auto',
-        minMaxRad: 'auto',
-        minRadFactor: 0,
-        iterations: 8,
-        drawsPerFrame: 10,
-        lineWidth: 2,
-        speed: 1,
-        bgColorInner: "#ffffff",
-        bgColorOuter: "#666666"
-    });
-
 ## Options
 
 | Option        | Type          | Default   | Description                                                                                                                                                                    |
