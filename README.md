@@ -1,4 +1,4 @@
-# waterpipe.js - smoky backgrounds generator (HTML5 Canvas)
+# Waterpipe.js - Smoky Backgrounds Generator
 
 waterpipe.js is a vanilla JavaScript library for smoky backgrounds developed by [dragdropsite.com](http://www.dragdropsite.com)
 
@@ -53,8 +53,8 @@ The following code could be used to call a method: `smokyBG.generate();`
 
 ## Credits
 
-[rectangleworld.com](http://rectangleworld.com/blog/) - big part of code has been taken from the examples provided on this blog
-[dragdropsite](http://dragdropsite.github.io/waterpipe.js) - the original code, this project is fork made with React + Vite
+- [rectangleworld.com](http://rectangleworld.com/blog/) - big part of code has been taken from the examples provided on this blog
+- [dragdropsite](http://dragdropsite.github.io/waterpipe.js) - the original code, this project is fork made with React + Vite
 
 ## License
 
