@@ -83,6 +83,7 @@ The following code could be used to call a method: `smokyBG.generate();`
 ## Credits
 
 [rectangleworld.com](http://rectangleworld.com/blog/) - big part of code has been taken from the examples provided on this blog
+[dragdropsite](http://dragdropsite.github.io/waterpipe.js) - the original code, this project is fork made with React + Vite
 
 ## License
 
