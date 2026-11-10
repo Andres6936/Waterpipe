@@ -20,7 +20,7 @@ jobs:
         run: bun install
 
       - name: Build project
-        run: bun run build
+        run: BASE_PATH="/${{ github.event.repository.name }}" bun run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
