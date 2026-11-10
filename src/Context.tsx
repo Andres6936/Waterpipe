@@ -14,7 +14,7 @@ const Context = React.createContext<ContextProps | null>(null);
 
 const Provider = (props: React.PropsWithChildren<{}>) => {
   const [values, setValues] = React.useState(defaults);
-  const smoke = React.useRef(new Smoke(values));
+  const [smoke] = React.useState(() => new Smoke(values));
 
   const setValue = (key: keyof Defaults, value: Defaults[keyof Defaults]) =>
     setValues({
@@ -22,17 +22,19 @@ const Provider = (props: React.PropsWithChildren<{}>) => {
       [key]: value,
     });
 
+  React.useEffect(function cleanUp() {
+    return () => smoke.destroy();
+  }, []);
+
   return (
     <Context.Provider
       value={{
         ...values,
         setValue,
-        setCanvas: (canvas: HTMLCanvasElement) =>
-          smoke.current.setCanvas(canvas),
-        start: () => smoke.current.start(),
-        stop: () => smoke.current.stop(),
-        update: (settings) =>
-          smoke.current.update(settings ? settings : values),
+        setCanvas: (canvas: HTMLCanvasElement) => smoke.setCanvas(canvas),
+        start: () => smoke.start(),
+        stop: () => smoke.stop(),
+        update: (settings) => smoke.update(settings ? settings : values),
       }}
     >
       {props.children}
