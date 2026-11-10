@@ -32,6 +32,7 @@ export class Smoke {
   public setCanvas(canvas: HTMLCanvasElement) {
     if (!canvas) throw new Error("The canvas element is null");
 
+    this.displayCanvas = canvas;
     this.displayWidth = canvas.clientWidth;
     this.displayHeight = canvas.clientHeight;
     canvas.width = canvas.clientWidth;
@@ -193,49 +194,64 @@ export class Smoke {
     return true;
   }
 
-  public download(width: number, height: number) {
-    this.exportContext.drawImage(
-      this.displayCanvas[0],
+  public download(width?: number, height?: number) {
+    const source = this.displayCanvas;
+    if (!source) {
+      throw new Error(
+        "The canvas has not been initialized. Call setCanvas() first.",
+      );
+    }
+
+    const targetWidth = Math.max(1, Math.round(width ?? this.displayWidth));
+    const targetHeight = Math.max(1, Math.round(height ?? this.displayHeight));
+
+    // Render the current frame into an off-screen canvas at the requested size.
+    const exportCanvas = document.createElement("canvas");
+    exportCanvas.width = targetWidth;
+    exportCanvas.height = targetHeight;
+
+    const exportContext = exportCanvas.getContext("2d");
+    if (!exportContext) return;
+
+    exportContext.drawImage(
+      source,
       0,
       0,
-      width,
-      height,
+      source.width,
+      source.height,
       0,
       0,
-      width,
-      height,
+      targetWidth,
+      targetHeight,
     );
-    //we will open a new window with the image contained within:
-    //retrieve canvas image as data URL:
-    const dataURL = this.exportCanvas.toDataURL("image/png");
-    //open a new window of appropriate size to hold the image:
-    const imageWindow = window.open(
-      "",
-      "fractalLineImage",
-      "left=0,top=0,width=" +
-        width +
-        ",height=" +
-        height +
-        ",toolbar=0,resizable=0",
-    );
-    //write some html into the new window, creating an empty image:
-    imageWindow.document.write("<title>Export Image</title>");
-    imageWindow.document.write(
-      "<img id='exportImage'" +
-        " alt=''" +
-        " height='" +
-        height +
-        "'" +
-        " width='" +
-        width +
-        "'" +
-        " style='position:absolute;left:0;top:0'/>",
-    );
-    imageWindow.document.close();
-    //copy the image into the empty img in the newly opened window:
-    const exportImage = imageWindow.document.getElementById("exportImage");
-    // @ts-ignore
-    exportImage.src = dataURL;
+
+    const fileName = `waterpipe-${targetWidth}x${targetHeight}.png`;
+
+    const saveBlob = (url: string) => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      // Give the browser a moment to start the download before releasing it.
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+
+    if (typeof exportCanvas.toBlob === "function") {
+      exportCanvas.toBlob((blob) => {
+        if (!blob) return;
+        saveBlob(URL.createObjectURL(blob));
+      }, "image/png");
+    } else {
+      // Fallback for browsers without toBlob support.
+      const link = document.createElement("a");
+      link.href = exportCanvas.toDataURL("image/png");
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
   }
 
   public setOption<T>(optionName: string, optionValue: T) {

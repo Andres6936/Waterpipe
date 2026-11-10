@@ -8,6 +8,7 @@ type ContextProps = Defaults & {
   update: (settings?: Partial<Defaults>) => void;
   setCanvas: (canvas: HTMLCanvasElement) => void;
   setValue: (key: keyof Defaults, value: Defaults[keyof Defaults]) => void;
+  download: (width?: number, height?: number) => void;
 };
 
 const Context = React.createContext<ContextProps | null>(null);
@@ -34,6 +35,7 @@ const Provider = (props: React.PropsWithChildren<{}>) => {
         setCanvas: (canvas: HTMLCanvasElement) => smoke.setCanvas(canvas),
         start: () => smoke.start(),
         stop: () => smoke.stop(),
+        download: (width, height) => smoke.download(width, height),
         update: (settings) => {
           if (settings)
             setValues({

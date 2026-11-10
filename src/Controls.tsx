@@ -1,3 +1,4 @@
+import React from "react";
 import { useContext } from "./Context";
 import { SAMPLES } from "./Samples";
 
@@ -7,6 +8,22 @@ function getRandomInt(min, max) {
 
 const Controls = () => {
   const context = useContext();
+
+  const [downloadWidth, setDownloadWidth] = React.useState(() =>
+    String(window.innerWidth),
+  );
+  const [downloadHeight, setDownloadHeight] = React.useState(() =>
+    String(window.innerHeight),
+  );
+
+  const onDownload = () => {
+    const width = Number.parseInt(downloadWidth, 10);
+    const height = Number.parseInt(downloadHeight, 10);
+    context.download(
+      Number.isFinite(width) && width > 0 ? width : undefined,
+      Number.isFinite(height) && height > 0 ? height : undefined,
+    );
+  };
 
   const onSelectSample = (index: number) => {
     const sample = SAMPLES.at(index);
@@ -158,11 +175,29 @@ const Controls = () => {
           <h2>Download size</h2>
           <div className="input-group">
             <label htmlFor="downloadWidth">Width (px):</label>
-            <input type="text" id="downloadWidth" name="downloadWidth" />
+            <input
+              type="number"
+              id="downloadWidth"
+              name="downloadWidth"
+              min={1}
+              value={downloadWidth}
+              onChange={({ currentTarget }) =>
+                setDownloadWidth(currentTarget.value)
+              }
+            />
           </div>
           <div className="input-group">
             <label htmlFor="downloadHeight">Height (px):</label>
-            <input type="text" id="downloadHeight" name="downloadHeight" />
+            <input
+              type="number"
+              id="downloadHeight"
+              name="downloadHeight"
+              min={1}
+              value={downloadHeight}
+              onChange={({ currentTarget }) =>
+                setDownloadHeight(currentTarget.value)
+              }
+            />
           </div>
           <h2 id="samples-section">Samples (click to generate)</h2>
           <div className="input-group samples">
@@ -279,7 +314,9 @@ const Controls = () => {
         >
           Generate
         </div>
-        <div className="btn btn-grey btn-download">Download</div>
+        <div className="btn btn-grey btn-download" onClick={onDownload}>
+          Download
+        </div>
       </div>
     </div>
   );
