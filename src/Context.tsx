@@ -34,7 +34,14 @@ const Provider = (props: React.PropsWithChildren<{}>) => {
         setCanvas: (canvas: HTMLCanvasElement) => smoke.setCanvas(canvas),
         start: () => smoke.start(),
         stop: () => smoke.stop(),
-        update: (settings) => smoke.update(settings ? settings : values),
+        update: (settings) => {
+          if (settings)
+            setValues({
+              ...values,
+              ...settings,
+            });
+          smoke.update(settings ? settings : values);
+        },
       }}
     >
       {props.children}
