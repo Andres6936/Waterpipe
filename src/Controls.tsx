@@ -1,6 +1,10 @@
 import { useContext } from "./Context";
 import { SAMPLES } from "./Samples";
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const Controls = () => {
   const context = useContext();
 
@@ -9,6 +13,11 @@ const Controls = () => {
     if (sample) {
       context.update(sample);
     }
+  };
+
+  const onSelectRandomSample = () => {
+    const index = getRandomInt(0, SAMPLES.length - 1);
+    onSelectSample(index);
   };
 
   return (
@@ -258,7 +267,12 @@ const Controls = () => {
       </div>
 
       <div className="flex flex-col buttons-wrap">
-        <div className="btn btn-grey btn-samples">Samples</div>
+        <div
+          className="btn btn-grey btn-samples"
+          onClick={() => onSelectRandomSample()}
+        >
+          Samples
+        </div>
         <div
           className="btn btn-grey btn-generate"
           onClick={() => context.update()}
